@@ -22,3 +22,16 @@ When the app runs, it uses React Native components like View, Text, TextInput, a
 ## Output
 
 The final result is a clean, scrollable screen showing course information in different categories. The section titles stand out in yellow, and each course is listed underneath. The app works on both web and mobile using Expo, giving users a quick view of program details.
+
+
+
+# PE03 – todos
+
+## Input
+The user types a task into the input field and presses the "Submit" button.
+
+## Process
+The app captures the input, creates a new todo item, and stores it in the app's state. The user can mark tasks as complete or delete them. The bottom tab bar filters tasks by All, Active, or Completed.
+
+## Output
+The todo list updates on screen with each new item. Completed items are marked, and only selected types are shown based on the active filter tab.
