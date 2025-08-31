@@ -2,8 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import uuid from 'react-native-uuid';
 import { colors } from '../theme';
+import { CountriesContext } from '../contexts/CountriesContext';
 
 export default class AddCountry extends React.Component {
+  static contextType = CountriesContext;
+
   state = { country: '', currency: '' };
 
   onChangeText = (key, value) => this.setState({ [key]: value });
@@ -14,10 +17,16 @@ export default class AddCountry extends React.Component {
     if (!country || !currency) {
       alert('Please complete the form'); return;
     }
-    const newCountry = { id: uuid.v4(), country, currency };
-    this.props.addCountry(newCountry);
+
+    const newCountry = {
+      id: uuid.v4(),
+      country,
+      currencies: [{ id: uuid.v4(), name: currency, info: '', used: true }],
+    };
+
+    this.context.addCountry(newCountry);      // <-- context
     this.setState({ country: '', currency: '' }, () => {
-      this.props.navigation.navigate('Countries');
+      this.props.navigation.navigate('CountriesNav'); // switch to the list tab
     });
   };
 

@@ -6,8 +6,12 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import Cities from './src/Cities/Cities';
 import AddCity from './src/AddCity/AddCity';
+
 import Countries from './src/Countries/Countries';
+import Country from './src/Countries/Country';
 import AddCountry from './src/AddCountry/AddCountry';
+
+import { CountriesProvider } from './src/contexts/CountriesContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -22,33 +26,35 @@ function CitiesStackScreen({ cities }) {
   );
 }
 
-function CountriesStackScreen({ countries }) {
-  function CountryPlaceholder() { return (<View><Text>Country Details Placeholder</Text></View>); }
+function CountriesStackScreen() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Countries">{(p) => <Countries {...p} countries={countries} />}</Stack.Screen>
-      <Stack.Screen name="Country" component={CountryPlaceholder} />
+      <Stack.Screen name="Countries" component={Countries} />
+      <Stack.Screen name="Country" component={Country} />
     </Stack.Navigator>
   );
 }
 
 export default function App() {
   const [cities, setCities] = useState([]);
-  const [countries, setCountries] = useState([]);
-
   const addCity = (city) => setCities((prev) => [...prev, city]);
-  const addCountry = (country) => setCountries((prev) => [...prev, country]);
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="CitiesNav">{(p) => <CitiesStackScreen {...p} cities={cities} />}</Tab.Screen>
-        <Tab.Screen name="AddCity">{(p) => <AddCity {...p} addCity={addCity} />}</Tab.Screen>
+    <CountriesProvider>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="CitiesNav">
+            {(p) => <CitiesStackScreen {...p} cities={cities} />}
+          </Tab.Screen>
+          <Tab.Screen name="AddCity">
+            {(p) => <AddCity {...p} addCity={addCity} />}
+          </Tab.Screen>
 
-        {/* NEW */}
-        <Tab.Screen name="CountriesNav">{(p) => <CountriesStackScreen {...p} countries={countries} />}</Tab.Screen>
-        <Tab.Screen name="AddCountry">{(p) => <AddCountry {...p} addCountry={addCountry} />}</Tab.Screen>
-      </Tab.Navigator>
-    </NavigationContainer>
+          {/* Countries now read/write via context */}
+          <Tab.Screen name="CountriesNav" component={CountriesStackScreen} />
+          <Tab.Screen name="AddCountry" component={AddCountry} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </CountriesProvider>
   );
 }
